@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Grocery Splitter</title>
+    <title>Grocery Splitter (Unlimited People)</title>
     <style>
         body { 
             font-family: Arial; 
@@ -33,28 +33,35 @@
             width: 95%;
             padding: 6px;
         }
+        .name-row {
+            margin-bottom: 8px;
+        }
     </style>
 </head>
 <body>
 
-<h2>Grocery Splitter (INR)</h2>
+<h2>Grocery Splitter (Unlimited People, INR ₹)</h2>
 
-<h3>Enter names of people:</h3>
+<h3>Enter People:</h3>
 <div id="namesArea">
-    <input type="text" class="nameInput" placeholder="Name 1">
-    <input type="text" class="nameInput" placeholder="Name 2">
-    <input type="text" class="nameInput" placeholder="Name 3">
-    <input type="text" class="nameInput" placeholder="Name 4">
-    <input type="text" class="nameInput" placeholder="Name 5">
-    <input type="text" class="nameInput" placeholder="Name 6">
+    <div class="name-row"><input type="text" class="nameInput" placeholder="Person Name"></div>
 </div>
 
+<button onclick="addPerson()">Add Person</button>
 <button onclick="createTable()">Create Table</button>
 
 <div id="tableContainer"></div>
 
 <script>
 let personNames = [];
+
+function addPerson() {
+    const area = document.getElementById("namesArea");
+    const div = document.createElement("div");
+    div.className = "name-row";
+    div.innerHTML = `<input type="text" class="nameInput" placeholder="Person Name">`;
+    area.appendChild(div);
+}
 
 function createTable() {
     const inputs = document.getElementsByClassName("nameInput");
@@ -118,7 +125,7 @@ function calculate() {
         }
     }
 
-    let resultHTML = "<h3>Total per Person:</h3>";
+    let resultHTML = "<h3>Total per Person (₹):</h3>";
     for (let i = 0; i < personNames.length; i++) {
         resultHTML += `${personNames[i]}: ₹${totals[i].toFixed(2)}<br>`;
     }
