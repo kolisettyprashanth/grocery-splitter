@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Grocery Splitter (Unlimited People)</title>
+    <title>Grocery Splitter </title>
     <style>
         body { 
             font-family: Arial; 
@@ -125,9 +125,9 @@ function calculate() {
         }
     }
 
-    let resultHTML = "<h3>Total per Person (₹):</h3>";
+    let resultHTML = "<h3>Total per Person ($):</h3>";
     for (let i = 0; i < personNames.length; i++) {
-        resultHTML += `${personNames[i]}: ₹${totals[i].toFixed(2)}<br>`;
+        resultHTML += `${personNames[i]}: $${totals[i].toFixed(2)}<br>`;
     }
 
     document.getElementById("results").innerHTML = resultHTML;
