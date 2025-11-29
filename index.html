@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Grocery Splitter</title>
+    <style>
+        body { font-family: Arial; margin: 20px; background:#f6f6f6; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background:white; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        th { background: #eaeaea; }
+        button { padding: 8px 15px; margin-top: 10px; }
+        .total-box { margin-top: 20px; padding: 10px; background: white; border:1px solid #ccc; }
+    </style>
+</head>
+<body>
+
+<h2>Grocery Splitter (6 People)</h2>
+
+<table id="itemsTable">
+    <tr>
+        <th>Item</th>
+        <th>Price</th>
+        <th>P1</th>
+        <th>P2</th>
+        <th>P3</th>
+        <th>P4</th>
+        <th>P5</th>
+        <th>P6</th>
+    </tr>
+</table>
+
+<button onclick="addRow()">Add Item</button>
+<button onclick="calculate()">Calculate Totals</button>
+
+<div class="total-box" id="results"></div>
+
+<script>
+function addRow() {
+    const table = document.getElementById("itemsTable");
+    const row = table.insertRow(-1);
+    
+    row.insertCell(0).innerHTML = `<input type='text' placeholder='Item'>`;
+    row.insertCell(1).innerHTML = `<input type='number' placeholder='0' step='0.01'>`;
+
+    for (let i = 0; i < 6; i++) {
+        row.insertCell(2 + i).innerHTML = `<input type='checkbox'>`;
+    }
+}
+
+function calculate() {
+    let totals = [0,0,0,0,0,0];
+    const table = document.getElementById("itemsTable");
+
+    for (let i = 1; i < table.rows.length; i++) {
+        let price = parseFloat(table.rows[i].cells[1].children[0].value) || 0;
+
+        let persons = [];
+        for (let p = 0; p < 6; p++) {
+            if (table.rows[i].cells[2 + p].children[0].checked) {
+                persons.push(p);
+            }
+        }
+
+        if (persons.length > 0) {
+            let share = price / persons.length;
+            persons.forEach(p => totals[p] += share);
+        }
+    }
+
+    document.getElementById("results").innerHTML =
+        `<h3>Total per Person:</h3>
+         P1: ₹${totals[0].toFixed(2)}<br>
+         P2: ₹${totals[1].toFixed(2)}<br>
+         P3: ₹${totals[2].toFixed(2)}<br>
+         P4: ₹${totals[3].toFixed(2)}<br>
+         P5: ₹${totals[4].toFixed(2)}<br>
+         P6: ₹${totals[5].toFixed(2)}<br>`;
+}
+</script>
+
+</body>
+</html>
