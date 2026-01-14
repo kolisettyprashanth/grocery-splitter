@@ -1,54 +1,74 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Grocery Splitter </title>
+    <title>Grocery Splitter</title>
     <style>
-        body { 
-            font-family: Arial; 
-            margin: 20px; 
-            background:#f6f6f6;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f6f6f6;
         }
-        h2 { margin-bottom: 5px; }
-        button { padding: 8px 15px; margin: 10px 5px; }
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            margin-top: 20px; 
-            background:white; 
+
+        h2, h3 {
+            margin-bottom: 8px;
         }
-        th, td { 
-            border: 1px solid #ccc; 
-            padding: 10px; 
-            text-align: center; 
+
+        button {
+            padding: 8px 15px;
+            margin: 8px 5px 8px 0;
+            cursor: pointer;
         }
-        th { background: #eaeaea; }
-        .total-box { 
-            margin-top: 20px; 
-            padding: 10px; 
-            background: white; 
-            border:1px solid #ccc; 
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: white;
         }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background: #eaeaea;
+        }
+
         input[type="text"], input[type="number"] {
             width: 95%;
             padding: 6px;
         }
+
         .name-row {
             margin-bottom: 8px;
+        }
+
+        .total-box {
+            margin-top: 15px;
+            padding: 12px;
+            background: white;
+            border: 1px solid #ccc;
         }
     </style>
 </head>
 <body>
 
-<h2>Grocery Splitter (Unlimited People, INR ₹)</h2>
+<h2>🛒 Grocery Splitter (INR ₹)</h2>
+<p>Split grocery bills item-wise among roommates.</p>
 
-<h3>Enter People:</h3>
+<h3>Enter People</h3>
 <div id="namesArea">
-    <div class="name-row"><input type="text" class="nameInput" placeholder="Person Name"></div>
+    <div class="name-row">
+        <input type="text" class="nameInput" placeholder="Person Name">
+    </div>
 </div>
 
-<button onclick="addPerson()">Add Person</button>
-<button onclick="createTable()">Create Table</button>
+<button onclick="addPerson()">➕ Add Person</button>
+<button onclick="createTable()">📋 Create Table</button>
+<button onclick="resetAll()">🔄 Reset</button>
 
 <div id="tableContainer"></div>
 
@@ -67,70 +87,83 @@ function createTable() {
     const inputs = document.getElementsByClassName("nameInput");
     personNames = [];
 
-    for (let i = 0; i < inputs.length; i++) {
-        let name = inputs[i].value.trim();
-        if (name !== "") personNames.push(name);
+    for (let input of inputs) {
+        const name = input.value.trim();
+        if (name && !personNames.includes(name)) {
+            personNames.push(name);
+        }
     }
 
     if (personNames.length === 0) {
-        alert("Please enter at least one name!");
+        alert("Please enter at least one valid name.");
         return;
     }
 
-    let html = `
-        <table id="itemsTable">
-            <tr>
-                <th>Item</th>
-                <th>Price (₹)</th>
-                ${personNames.map(n => `<th>${n}</th>`).join("")}
-            </tr>
-        </table>
-        <button onclick="addRow()">Add Item</button>
-        <button onclick="calculate()">Calculate Totals</button>
-        <div class="total-box" id="results"></div>
+    const headerRow = `
+        <tr>
+            <th>#</th>
+            <th>Item</th>
+            <th>Price (₹)</th>
+            ${personNames.map(name => `<th>${name}</th>`).join("")}
+        </tr>
     `;
 
-    document.getElementById("tableContainer").innerHTML = html;
+    document.getElementById("tableContainer").innerHTML = `
+        <table id="itemsTable">${headerRow}</table>
+        <button onclick="addRow()">➕ Add Item</button>
+        <button onclick="calculate()">🧮 Calculate Totals</button>
+        <div class="total-box" id="results"></div>
+    `;
 }
 
 function addRow() {
     const table = document.getElementById("itemsTable");
+    const rowIndex = table.rows.length;
     const row = table.insertRow(-1);
 
-    row.insertCell(0).innerHTML = `<input type='text' placeholder='Item'>`;
-    row.insertCell(1).innerHTML = `<input type='number' placeholder='0' step='0.01'>`;
+    row.insertCell(0).innerText = rowIndex;
+    row.insertCell(1).innerHTML = `<input type="text" placeholder="Item name">`;
+    row.insertCell(2).innerHTML = `<input type="number" min="0" step="0.01" placeholder="0.00">`;
 
     for (let i = 0; i < personNames.length; i++) {
-        row.insertCell(2 + i).innerHTML = `<input type='checkbox'>`;
+        row.insertCell(3 + i).innerHTML = `<input type="checkbox">`;
     }
 }
 
 function calculate() {
-    let totals = Array(personNames.length).fill(0);
+    const totals = Array(personNames.length).fill(0);
     const table = document.getElementById("itemsTable");
 
     for (let i = 1; i < table.rows.length; i++) {
-        let price = parseFloat(table.rows[i].cells[1].children[0].value) || 0;
+        const price = parseFloat(table.rows[i].cells[2].children[0].value);
 
-        let persons = [];
+        if (!price || price <= 0) continue;
+
+        const selectedPeople = [];
         for (let p = 0; p < personNames.length; p++) {
-            if (table.rows[i].cells[2 + p].children[0].checked) {
-                persons.push(p);
+            if (table.rows[i].cells[3 + p].children[0].checked) {
+                selectedPeople.push(p);
             }
         }
 
-        if (persons.length > 0) {
-            let share = price / persons.length;
-            persons.forEach(p => totals[p] += share);
-        }
+        if (selectedPeople.length === 0) continue;
+
+        const share = price / selectedPeople.length;
+        selectedPeople.forEach(p => {
+            totals[p] += share;
+        });
     }
 
-    let resultHTML = "<h3>Total per Person ($):</h3>";
-    for (let i = 0; i < personNames.length; i++) {
-        resultHTML += `${personNames[i]}: $${totals[i].toFixed(2)}<br>`;
-    }
+    let resultHTML = `<h3>Total per Person</h3>`;
+    personNames.forEach((name, i) => {
+        resultHTML += `<strong>${name}</strong>: ₹${totals[i].toFixed(2)}<br>`;
+    });
 
     document.getElementById("results").innerHTML = resultHTML;
+}
+
+function resetAll() {
+    location.reload();
 }
 </script>
 
