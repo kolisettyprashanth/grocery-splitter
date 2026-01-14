@@ -56,7 +56,7 @@
 </head>
 <body>
 
-<h2>🛒 Grocery Splitter (INR ₹)</h2>
+<h2>🛒 Grocery Splitter (INR $)</h2>
 <p>Split grocery bills item-wise among roommates.</p>
 
 <h3>Enter People</h3>
@@ -103,7 +103,7 @@ function createTable() {
         <tr>
             <th>#</th>
             <th>Item</th>
-            <th>Price (₹)</th>
+            <th>Price ($)</th>
             ${personNames.map(name => `<th>${name}</th>`).join("")}
         </tr>
     `;
@@ -156,7 +156,7 @@ function calculate() {
 
     let resultHTML = `<h3>Total per Person</h3>`;
     personNames.forEach((name, i) => {
-        resultHTML += `<strong>${name}</strong>: ₹${totals[i].toFixed(2)}<br>`;
+        resultHTML += `<strong>${name}</strong>: $${totals[i].toFixed(2)}<br>`;
     });
 
     document.getElementById("results").innerHTML = resultHTML;
