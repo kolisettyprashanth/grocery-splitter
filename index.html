@@ -1,171 +1,224 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Grocery Splitter</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background: #f6f6f6;
-        }
-
-        h2, h3 {
-            margin-bottom: 8px;
-        }
-
-        button {
-            padding: 8px 15px;
-            margin: 8px 5px 8px 0;
-            cursor: pointer;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            background: white;
-        }
-
-        th, td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: center;
-        }
-
-        th {
-            background: #eaeaea;
-        }
-
-        input[type="text"], input[type="number"] {
-            width: 95%;
-            padding: 6px;
-        }
-
-        .name-row {
-            margin-bottom: 8px;
-        }
-
-        .total-box {
-            margin-top: 15px;
-            padding: 12px;
-            background: white;
-            border: 1px solid #ccc;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grocery Splitter</title>
+  <style>
+    :root{--bg:#f4f7fb;--card:#fff;--ink:#17202a;--muted:#64748b;--line:#d8e1ea;--brand:#0f766e;--brand2:#115e59;--accent:#d97706;--bad:#b42318;--shadow:0 14px 34px rgba(15,23,42,.08)}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    button,input,select{font:inherit} button{border:0;border-radius:7px;cursor:pointer;font-weight:800}
+    .app{max-width:1180px;margin:0 auto;padding:24px}.hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center;margin-bottom:18px}
+    .eyebrow{margin:0 0 6px;color:var(--brand);font-size:.78rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
+    h1,h2,p{margin-top:0} h1{margin-bottom:8px;font-size:clamp(2.1rem,4vw,3.8rem);line-height:1;letter-spacing:0}.sub{max-width:720px;margin:0;color:var(--muted);line-height:1.55}
+    .tools,.actions{display:flex;flex-wrap:wrap;gap:10px}.tools{justify-content:flex-end}.btn{min-height:40px;padding:0 14px;color:#fff;background:var(--brand)}.btn:hover{background:var(--brand2)}
+    .btn.secondary{color:var(--ink);background:#e8eef5}.btn.secondary:hover{background:#dbe5ef}.btn.warn{background:var(--accent)}.btn.bad{background:var(--bad)}
+    .layout{display:grid;grid-template-columns:minmax(250px,330px) minmax(0,1fr);gap:18px;align-items:start}.panel,.metric,.table-wrap,.card{border:1px solid var(--line);border-radius:8px;background:var(--card);box-shadow:var(--shadow)}
+    .panel{padding:18px}.panel h2{font-size:1.05rem;margin-bottom:12px}.field{display:grid;gap:6px;margin-bottom:14px}label{color:var(--muted);font-size:.85rem;font-weight:800}
+    input,select{width:100%;min-height:40px;border:1px solid var(--line);border-radius:7px;padding:8px 10px;background:#fff;color:var(--ink)}input:focus,select:focus{outline:3px solid rgba(15,118,110,.14);border-color:var(--brand)}
+    .person{display:grid;grid-template-columns:minmax(0,1fr) 36px;gap:8px;margin-bottom:8px}.x{width:36px;height:36px;color:var(--bad);background:#fff1f0}.hint,.status{color:var(--muted);font-size:.88rem;line-height:1.45}.status{min-height:20px;margin:10px 0 0}
+    .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}.metric{padding:14px}.metric span{display:block;color:var(--muted);font-size:.78rem;font-weight:900;text-transform:uppercase}.metric strong{display:block;margin-top:4px;font-size:1.5rem}
+    .table-wrap{overflow-x:auto}table{width:100%;min-width:840px;border-collapse:collapse}th,td{border-bottom:1px solid var(--line);padding:10px;text-align:left;vertical-align:middle}th{background:#eef3f7;color:#334155;font-size:.78rem;font-weight:900;text-transform:uppercase}
+    td.price,th.price{width:110px;text-align:right}td.all,th.all{width:78px;text-align:center}.share{display:flex;flex-wrap:wrap;gap:8px;min-width:220px}.chip,.all-toggle{display:inline-flex;align-items:center;gap:6px;font-weight:800}.chip{min-height:32px;border:1px solid var(--line);border-radius:7px;padding:0 8px;background:#f8fafc;color:#334155;font-size:.9rem}.chip input,.all-toggle input{width:16px;min-height:16px;margin:0}
+    .results{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(260px,.85fr);gap:18px;margin-top:18px}.card{padding:16px}.list{display:grid;gap:10px;margin-top:12px}.row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;border:1px solid var(--line);border-radius:7px;padding:10px;background:#fbfdff}.row small{display:block;margin-top:2px;color:var(--muted)}.amt{font-weight:900}.pos{color:var(--brand2)}.neg{color:var(--bad)}
+    .empty{border:1px dashed #b9c6d2;border-radius:8px;padding:24px;color:var(--muted);background:#fff;text-align:center}
+    @media(max-width:860px){.hero,.layout,.results{grid-template-columns:1fr}.tools{justify-content:flex-start}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:540px){.app{padding:16px}.metrics{grid-template-columns:1fr}.actions .btn{width:100%}}
+    @media print{body{background:#fff}.panel,.tools,.actions,.x{display:none!important}.app{max-width:none;padding:0}.layout,.results{display:block}.metric,.table-wrap,.card{box-shadow:none}}
+  </style>
 </head>
 <body>
+  <main class="app">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Roommate bill desk</p>
+        <h1>Grocery Splitter</h1>
+        <p class="sub">Split every item by who used it, track who paid, and get totals plus a settlement plan before anyone starts doing mental math in the kitchen.</p>
+      </div>
+      <div class="tools">
+        <button class="btn secondary" id="demo" type="button">Load Demo</button>
+        <button class="btn secondary" id="csv" type="button">Export CSV</button>
+        <button class="btn secondary" id="print" type="button">Print</button>
+      </div>
+    </section>
 
-<h2>🛒 Grocery Splitter (USD $)</h2>
-<p>Split grocery bills item-wise among roommates.</p>
+    <section class="layout">
+      <aside class="panel">
+        <h2>People</h2>
+        <div id="people"></div>
+        <div class="actions">
+          <button class="btn secondary" id="addPerson" type="button">Add Person</button>
+          <button class="btn" id="build" type="button">Build Table</button>
+        </div>
+        <p class="hint">Names stay unique. Rebuild after changing people so each item updates its sharing options.</p>
+        <hr>
+        <h2>Settings</h2>
+        <div class="field">
+          <label for="currency">Currency</label>
+          <select id="currency">
+            <option value="USD">USD ($)</option>
+            <option value="INR">INR (Rs)</option>
+            <option value="EUR">EUR (Euro)</option>
+            <option value="GBP">GBP (Pound)</option>
+          </select>
+        </div>
+        <div class="actions">
+          <button class="btn warn" id="addItem" type="button">Add Item</button>
+          <button class="btn bad" id="reset" type="button">Reset</button>
+        </div>
+        <p class="status" id="status" aria-live="polite"></p>
+      </aside>
 
-<h3>Enter People</h3>
-<div id="namesArea">
-    <div class="name-row">
-        <input type="text" class="nameInput" placeholder="Person Name">
-    </div>
-</div>
+      <section>
+        <div class="metrics" id="metrics"></div>
+        <div id="table"></div>
+        <div class="results" id="results"></div>
+      </section>
+    </section>
+  </main>
 
-<button onclick="addPerson()">➕ Add Person</button>
-<button onclick="createTable()">📋 Create Table</button>
-<button onclick="resetAll()">🔄 Reset</button>
+  <script>
+    const KEY="grocery-splitter-v2";
+    const symbols={USD:"$",INR:"Rs",EUR:"Euro",GBP:"Pound"};
+    const item=(name="",category="Grocery",price=0,paidBy="",sharedBy=[])=>({id:(crypto&&crypto.randomUUID)?crypto.randomUUID():String(Date.now()+Math.random()),name,category,price,paidBy,sharedBy});
+    const state={people:["Alex","Maya"],currency:"USD",items:[item("Milk","Dairy",5.50,"Alex",["Alex","Maya"]),item("Rice","Pantry",12,"Maya",["Alex","Maya"])]};
+    const $=id=>document.getElementById(id);
 
-<div id="tableContainer"></div>
+    $("addPerson").onclick=()=>personInput("");
+    $("build").onclick=applyPeople;
+    $("addItem").onclick=()=>{if(!state.people.length)state.people=["Person 1"];state.items.push(item("","Grocery",0,state.people[0],[...state.people]));saveRender("Added a new item row.")};
+    $("reset").onclick=resetAll;
+    $("demo").onclick=loadDemo;
+    $("csv").onclick=exportCsv;
+    $("print").onclick=()=>window.print();
+    $("currency").onchange=()=>{state.currency=$("currency").value;saveRender("Currency updated.")};
 
-<script>
-let personNames = [];
+    restore(); render();
 
-function addPerson() {
-    const area = document.getElementById("namesArea");
-    const div = document.createElement("div");
-    div.className = "name-row";
-    div.innerHTML = `<input type="text" class="nameInput" placeholder="Person Name">`;
-    area.appendChild(div);
-}
-
-function createTable() {
-    const inputs = document.getElementsByClassName("nameInput");
-    personNames = [];
-
-    for (let input of inputs) {
-        const name = input.value.trim();
-        if (name && !personNames.includes(name)) {
-            personNames.push(name);
+    function restore(){
+      try{
+        const saved=JSON.parse(localStorage.getItem(KEY)||"null");
+        if(saved&&Array.isArray(saved.people)&&Array.isArray(saved.items)){
+          state.people=saved.people; state.currency=saved.currency||"USD";
+          state.items=saved.items.map(i=>({id:i.id||item().id,name:i.name||"",category:i.category||"Grocery",price:Number(i.price)||0,paidBy:i.paidBy||saved.people[0]||"",sharedBy:Array.isArray(i.sharedBy)?i.sharedBy:[]}));
         }
+      }catch{localStorage.removeItem(KEY)}
+    }
+    function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+    function saveRender(msg=""){save();render();setStatus(msg)}
+    function render(){ $("currency").value=state.currency; renderPeople(); renderMetrics(); renderTable(); renderResults() }
+    function setStatus(msg){$("status").textContent=msg}
+    function money(v){return `${symbols[state.currency]} ${round(v).toFixed(2)}`}
+    function round(v){return Math.round((Number(v)||0)*100)/100}
+    function el(tag,cls,text){const n=document.createElement(tag); if(cls)n.className=cls; if(text!==undefined)n.textContent=text; return n}
+    function empty(text){return el("div","empty",text)}
+
+    function renderPeople(){
+      $("people").replaceChildren();
+      (state.people.length?state.people:[""]).forEach(personInput);
+    }
+    function personInput(value){
+      const row=el("div","person"), input=el("input"), remove=el("button","x","x");
+      input.type="text"; input.placeholder="Person name"; input.className="personName"; input.value=value;
+      remove.type="button"; remove.title="Remove person"; remove.onclick=()=>{row.remove();applyPeople()};
+      row.append(input,remove); $("people").append(row);
+    }
+    function applyPeople(){
+      const names=[...document.querySelectorAll(".personName")].map(i=>i.value.trim()).filter(Boolean);
+      const unique=[...new Set(names)];
+      if(!unique.length){setStatus("Add at least one person before building the table.");return}
+      state.people=unique;
+      state.items=state.items.map(i=>({...i,paidBy:unique.includes(i.paidBy)?i.paidBy:unique[0],sharedBy:i.sharedBy.filter(n=>unique.includes(n))}));
+      if(!state.items.length)state.items.push(item("","Grocery",0,unique[0],[...unique]));
+      saveRender(unique.length!==names.length?"Duplicate names were removed.":"People updated.");
     }
 
-    if (personNames.length === 0) {
-        alert("Please enter at least one valid name.");
-        return;
+    function renderMetrics(){
+      const t=totals();
+      $("metrics").replaceChildren(...[["Overall Total",money(t.overall)],["Items",state.items.length],["People",state.people.length],["Unassigned",t.unassigned]].map(([k,v])=>{
+        const c=el("div","metric"), s=el("span","",k), b=el("strong","",String(v)); c.append(s,b); return c;
+      }));
+    }
+    function renderTable(){
+      if(!state.people.length){$("table").replaceChildren(empty("Add people to start splitting groceries."));return}
+      if(!state.items.length){$("table").replaceChildren(empty("No items yet. Add an item to begin."));return}
+      const wrap=el("div","table-wrap"), table=el("table"), head=el("thead"), hr=el("tr");
+      ["Item","Category","Paid By","Price","All","Shared By",""].forEach(h=>{const th=el("th",h==="Price"?"price":h==="All"?"all":"",h);hr.append(th)});
+      head.append(hr); const body=el("tbody"); state.items.forEach(i=>body.append(rowFor(i))); table.append(head,body); wrap.append(table); $("table").replaceChildren(wrap);
+    }
+    function rowFor(i){
+      const tr=el("tr");
+      tr.append(textCell(i,"name","Item name"),textCell(i,"category","Category"),paidCell(i),priceCell(i),allCell(i),shareCell(i),removeCell(i.id));
+      return tr;
+    }
+    function textCell(i,key,placeholder){
+      const td=el("td"), input=el("input"); input.type="text"; input.placeholder=placeholder; input.value=i[key];
+      input.oninput=()=>updateItem(i.id,{[key]:input.value},false); td.append(input); return td;
+    }
+    function paidCell(i){
+      const td=el("td"), select=el("select");
+      state.people.forEach(name=>{const o=el("option","",name);o.value=name;select.append(o)});
+      select.value=state.people.includes(i.paidBy)?i.paidBy:state.people[0];
+      select.onchange=()=>updateItem(i.id,{paidBy:select.value},false); td.append(select); return td;
+    }
+    function priceCell(i){
+      const td=el("td","price"), input=el("input"); input.type="number"; input.min="0"; input.step="0.01"; input.placeholder="0.00"; input.value=i.price?String(i.price):"";
+      input.oninput=()=>updateItem(i.id,{price:Number(input.value)||0},false); td.append(input); return td;
+    }
+    function allCell(i){
+      const td=el("td","all"), label=el("label","all-toggle"), box=el("input"), text=el("span","All","All");
+      box.type="checkbox"; box.checked=state.people.every(n=>i.sharedBy.includes(n));
+      box.onchange=()=>{updateItem(i.id,{sharedBy:box.checked?[...state.people]:[]});setStatus(box.checked?"Everyone selected for that item.":"Everyone cleared for that item.")};
+      label.append(box,text); td.append(label); return td;
+    }
+    function shareCell(i){
+      const td=el("td"), group=el("div","share");
+      state.people.forEach(name=>{const label=el("label","chip"), box=el("input"), text=el("span","",name); box.type="checkbox"; box.checked=i.sharedBy.includes(name);
+        box.onchange=()=>updateItem(i.id,{sharedBy:box.checked?[...new Set([...i.sharedBy,name])]:i.sharedBy.filter(p=>p!==name)});
+        label.append(box,text); group.append(label);
+      });
+      td.append(group); return td;
+    }
+    function removeCell(id){
+      const td=el("td"), b=el("button","x","x"); b.type="button"; b.title="Remove item"; b.onclick=()=>{state.items=state.items.filter(i=>i.id!==id);saveRender("Item removed.")}; td.append(b); return td;
+    }
+    function updateItem(id,patch,rerenderTable=true){
+      state.items=state.items.map(i=>i.id===id?{...i,...patch}:i); save(); renderMetrics(); renderResults(); if(rerenderTable)renderTable();
     }
 
-    const headerRow = `
-        <tr>
-            <th>#</th>
-            <th>Item</th>
-            <th>Price ($)</th>
-            ${personNames.map(name => `<th>${name}</th>`).join("")}
-        </tr>
-    `;
-
-    document.getElementById("tableContainer").innerHTML = `
-        <table id="itemsTable">${headerRow}</table>
-        <button onclick="addRow()">➕ Add Item</button>
-        <button onclick="calculate()">🧮 Calculate Totals</button>
-        <div class="total-box" id="results"></div>
-    `;
-}
-
-function addRow() {
-    const table = document.getElementById("itemsTable");
-    const rowIndex = table.rows.length;
-    const row = table.insertRow(-1);
-
-    row.insertCell(0).innerText = rowIndex;
-    row.insertCell(1).innerHTML = `<input type="text" placeholder="Item name">`;
-    row.insertCell(2).innerHTML = `<input type="number" min="0" step="0.01" placeholder="0.00">`;
-
-    for (let i = 0; i < personNames.length; i++) {
-        row.insertCell(3 + i).innerHTML = `<input type="checkbox">`;
+    function totals(){
+      const owed=Object.fromEntries(state.people.map(n=>[n,0])), paid=Object.fromEntries(state.people.map(n=>[n,0]));
+      let overall=0, unassigned=0;
+      state.items.forEach(i=>{
+        const price=Number(i.price)||0; if(price<=0)return; overall+=price; if(paid[i.paidBy]!==undefined)paid[i.paidBy]+=price;
+        const shared=i.sharedBy.filter(n=>state.people.includes(n)); if(!shared.length){unassigned++;return}
+        shared.forEach(n=>owed[n]+=price/shared.length);
+      });
+      const balance=Object.fromEntries(state.people.map(n=>[n,paid[n]-owed[n]]));
+      return {owed,paid,balance,overall,unassigned,settlements:settlements(balance)};
     }
-}
-
-function calculate() {
-    const totals = Array(personNames.length).fill(0);
-    const table = document.getElementById("itemsTable");
-
-    for (let i = 1; i < table.rows.length; i++) {
-        const price = parseFloat(table.rows[i].cells[2].children[0].value);
-
-        if (!price || price <= 0) continue;
-
-        const selectedPeople = [];
-        for (let p = 0; p < personNames.length; p++) {
-            if (table.rows[i].cells[3 + p].children[0].checked) {
-                selectedPeople.push(p);
-            }
-        }
-
-        if (selectedPeople.length === 0) continue;
-
-        const share = price / selectedPeople.length;
-        selectedPeople.forEach(p => {
-            totals[p] += share;
-        });
+    function settlements(balance){
+      const debt=[], credit=[], out=[];
+      Object.entries(balance).forEach(([name,amt])=>{const v=round(amt); if(v<-0.009)debt.push({name,amt:Math.abs(v)}); if(v>0.009)credit.push({name,amt:v})});
+      let d=0,c=0; while(d<debt.length&&c<credit.length){const amt=round(Math.min(debt[d].amt,credit[c].amt)); if(amt>0)out.push({from:debt[d].name,to:credit[c].name,amt}); debt[d].amt=round(debt[d].amt-amt); credit[c].amt=round(credit[c].amt-amt); if(debt[d].amt<=.009)d++; if(credit[c].amt<=.009)c++}
+      return out;
     }
-
-    let resultHTML = `<h3>Total per Person</h3>`;
-    personNames.forEach((name, i) => {
-        resultHTML += `<strong>${name}</strong>: $${totals[i].toFixed(2)}<br>`;
-    });
-
-    document.getElementById("results").innerHTML = resultHTML;
-}
-
-function resetAll() {
-    location.reload();
-}
-</script>
-
+    function renderResults(){
+      const t=totals(), per=el("section","card"), settle=el("section","card"), perList=el("div","list"), settleList=el("div","list");
+      per.append(el("h2","","Total Per Person"), el("p","hint","Owed is each person's fair share. Balance accounts for what they already paid."));
+      state.people.forEach(name=>{const r=el("div","row"), left=el("div"), n=el("strong","",name), small=el("small","",`Paid ${money(t.paid[name])} | Owes ${money(t.owed[name])}`), right=el("div",`amt ${t.balance[name]>=0?"pos":"neg"}`,t.balance[name]>=0?`Gets ${money(t.balance[name])}`:`Pays ${money(Math.abs(t.balance[name]))}`); left.append(n,small); r.append(left,right); perList.append(r)});
+      per.append(perList);
+      settle.append(el("h2","","Settlement Plan"), el("p","hint",`Overall grocery total: ${money(t.overall)}. Use this to check against your receipt total.`));
+      if(!t.settlements.length)settleList.append(empty("No settlement needed yet."));
+      t.settlements.forEach(s=>{const r=el("div","row"); r.append(el("div","",`${s.from} pays ${s.to}`),el("div","amt",money(s.amt))); settleList.append(r)});
+      settle.append(settleList); $("results").replaceChildren(per,settle);
+    }
+    function resetAll(){localStorage.removeItem(KEY);state.people=["Alex","Maya"];state.currency="USD";state.items=[item("Milk","Dairy",5.50,"Alex",["Alex","Maya"]),item("Rice","Pantry",12,"Maya",["Alex","Maya"])];saveRender("Reset to the starter list.")}
+    function loadDemo(){state.people=["Alex","Maya","Jordan","Priya"];state.currency="USD";state.items=[item("Vegetables","Produce",18.40,"Priya",state.people),item("Coffee","Pantry",14.99,"Jordan",["Jordan","Priya"]),item("Greek yogurt","Dairy",8.25,"Maya",["Alex","Maya"]),item("Snacks","Shared",21.10,"Alex",state.people)];saveRender("Demo loaded.")}
+    function exportCsv(){
+      const rows=[["Item","Category","Paid By","Price","Shared By"],...state.items.map(i=>[i.name,i.category,i.paidBy,round(i.price).toFixed(2),i.sharedBy.join("; ")])];
+      const csv=rows.map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(",")).join("\n");
+      const link=el("a"); link.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"})); link.download="grocery-splitter.csv"; link.click(); URL.revokeObjectURL(link.href); setStatus("CSV exported.");
+    }
+  </script>
 </body>
 </html>

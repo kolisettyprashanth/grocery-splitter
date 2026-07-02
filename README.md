@@ -1,34 +1,33 @@
-# grocery-splitter
-# 🛒 Grocery Splitter
+# Grocery Splitter
 
-A lightweight web app to split grocery bills **item-wise** among roommates — something Splitwise doesn’t support natively.
+A lightweight web app for splitting grocery bills item by item among roommates.
 
-Built using **pure HTML, CSS, and JavaScript**. No backend. No login. Just open and use.
+The app is built with plain HTML, CSS, and JavaScript. There is no backend, login, build step, or dependency install. Open `index.html` in a browser and use it.
 
----
+## Features
 
-## ✨ Features
+- Add and manage roommates
+- Add grocery items with category, price, payer, and shared-by selection
+- Select everyone for an item with the row-level **All** checkbox
+- Calculate each person's owed amount, paid amount, and final balance
+- Show the overall grocery total for receipt checking
+- Generate a simple settlement plan
+- Switch currency display between USD, INR, EUR, and GBP
+- Save progress in the browser with local storage
+- Load demo data, export CSV, print, and reset
 
-- Unlimited number of people
-- Item-wise bill splitting
-- Select who consumed each item
-- Automatically calculates fair share per person
-- INR (₹) currency support
-- Fully client-side (privacy-friendly)
+## How It Works
 
----
+1. Add the people sharing groceries.
+2. Build the table.
+3. Add items with prices and the person who paid.
+4. Select who shared each item, or use **All** for everyone.
+5. Review the per-person totals, overall total, and settlement plan.
 
-## 🚀 How It Works
+## Project Structure
 
-1. Enter names of all roommates
-2. Create the grocery table
-3. Add grocery items and their prices
-4. Check who shared each item
-5. Click **Calculate Totals**
-6. See how much each person owes
-
----
-
-## 📂 Project Structure
-
-
+```text
+grocery-splitter/
+  index.html  # Complete app: markup, styles, and JavaScript
+  README.md   # Project notes
+```
