@@ -557,7 +557,7 @@
     const KEY = "grocery-splitter-v2";
     const symbols = { USD: "$", INR: "₹", EUR: "€", GBP: "£" };
     const item = (name = "", price = 0, paidBy = "", sharedBy = []) => ({ id: (crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now() + Math.random()), name, price, paidBy, sharedBy });
-    const state = { people: ["Prasanth", "Varun"], currency: "USD", defaultPayer: "Prasanth", items: [item("Milk", 5.50, "Prasanth", ["Prasanth", "Varun"]), item("Rice", 12, "Varun", ["Prasanth", "Varun"])] };
+    const state = { people: ["Varun"], currency: "USD", defaultPayer: "Varun", items: [item("Milk", 5.50, "Varun", ["Varun"])] };
     const $ = id => document.getElementById(id);
 
     $("addPerson").onclick = () => personInput("");
@@ -697,7 +697,7 @@
       t.settlements.forEach(s => { const r = el("div", "row"); r.append(el("div", "", `${s.from} pays ${s.to}`), el("div", "amt", money(s.amt))); settleList.append(r) });
       settle.append(settleList); $("results").replaceChildren(per, settle);
     }
-    function resetAll() { localStorage.removeItem(KEY); state.people = ["Prasanth", "Varun"]; state.currency = "USD"; state.defaultPayer = "Prasanth"; state.items = [item("Milk", 5.50, "Prasanth", ["Prasanth", "Varun"]), item("Rice", 12, "Varun", ["Prasanth", "Varun"])]; saveRender("Reset to the starter list.") }
+    function resetAll() { localStorage.removeItem(KEY); state.people = ["Varun"]; state.currency = "USD"; state.defaultPayer = "Varun"; state.items = [item("Milk", 5.50, "Varun", ["Varun"])]; saveRender("Reset to the starter list.") }
     function loadDemo() { state.people = ["Prasanth", "Varun", "Jordan", "Priya"]; state.currency = "USD"; state.defaultPayer = "Priya"; state.items = [item("Vegetables", 18.40, "Priya", state.people), item("Coffee", 14.99, "Jordan", ["Jordan", "Priya"]), item("Greek yogurt", 8.25, "Varun", ["Prasanth", "Varun"]), item("Snacks", 21.10, "Prasanth", state.people)]; saveRender("Demo loaded.") }
     function exportCsv() {
       const rows = [["Item", "Paid By", "Price", "Shared By"], ...state.items.map(i => [i.name, i.paidBy, round(i.price).toFixed(2), i.sharedBy.join("; ")])];
