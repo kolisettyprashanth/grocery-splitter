@@ -56,9 +56,9 @@
           <label for="currency">Currency</label>
           <select id="currency">
             <option value="USD">USD ($)</option>
-            <option value="INR">INR (Rs)</option>
-            <option value="EUR">EUR (Euro)</option>
-            <option value="GBP">GBP (Pound)</option>
+            <option value="INR">INR (₹)</option>
+            <option value="EUR">EUR (€)</option>
+            <option value="GBP">GBP (£)</option>
           </select>
         </div>
         <div class="actions">
@@ -78,7 +78,7 @@
 
   <script>
     const KEY="grocery-splitter-v2";
-    const symbols={USD:"$",INR:"Rs",EUR:"Euro",GBP:"Pound"};
+    const symbols={USD:"$",INR:"₹",EUR:"€",GBP:"£"};
     const item=(name="",category="Grocery",price=0,paidBy="",sharedBy=[])=>({id:(crypto&&crypto.randomUUID)?crypto.randomUUID():String(Date.now()+Math.random()),name,category,price,paidBy,sharedBy});
     const state={people:["Alex","Maya"],currency:"USD",items:[item("Milk","Dairy",5.50,"Alex",["Alex","Maya"]),item("Rice","Pantry",12,"Maya",["Alex","Maya"])]};
     const $=id=>document.getElementById(id);
